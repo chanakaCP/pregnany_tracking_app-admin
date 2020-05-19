@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "771220702662",
+    "firebase_url": "https://pregnancytrackingapp-737af.firebaseio.com",
+    "project_id": "pregnancytrackingapp-737af",
+    "storage_bucket": "pregnancytrackingapp-737af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771220702662:android:855b2f82ddb51048a21ec7",
+        "android_client_info": {
+          "package_name": "com.example.mama_k_app_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771220702662-chdrlh859o3os53aa65ku02rmdqc5n6v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsEIO5Xd4afjBPsGhWkfpp4EDkil4aOdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771220702662-chdrlh859o3os53aa65ku02rmdqc5n6v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771220702662:android:40fa8133e7a843e2a21ec7",
+        "android_client_info": {
+          "package_name": "com.example.pregnancy_tracking_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771220702662-8c1subik4ugf7h19qsf7i6cs5cq6mdhe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pregnancy_tracking_app",
+            "certificate_hash": "7a9078359f5d917a757027739a6a07d710dbef08"
+          }
+        },
+        {
+          "client_id": "771220702662-chdrlh859o3os53aa65ku02rmdqc5n6v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsEIO5Xd4afjBPsGhWkfpp4EDkil4aOdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771220702662-chdrlh859o3os53aa65ku02rmdqc5n6v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
