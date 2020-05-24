@@ -4,6 +4,8 @@ class Baby {
   double weight;
   String imageURL;
   String tipDescription;
+
+  // Baby(size )
 }
 
 // class BabyDevRecord {
