@@ -1,7 +1,5 @@
-class Mother {
-  String id;
+class MotherInWeek {
   int month;
   int week;
-  String imageURL;
   String tipDescription;
 }
