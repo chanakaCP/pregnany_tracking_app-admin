@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mama_k_app_admin/Screens/admin/babysDev/babyDevAdd.dart';
 import 'package:mama_k_app_admin/Screens/admin/babysDev/deleteBabyWeek.dart';
-import 'package:mama_k_app_admin/models/babyModel.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';
 
 class BabysDev extends StatefulWidget {
@@ -13,17 +12,12 @@ class _BabysDevState extends State<BabysDev> {
   DatabaseService _databaseService = DatabaseService();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.only(top: 40.0, left: 30.0, right: 30.0),
+            padding: EdgeInsets.only(top: 25.0, left: 30.0, right: 30.0),
             width: double.infinity,
             child: Column(
               children: <Widget>[
