@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mama_k_app_admin/Screens/admin/babysDev/babyDevAdd.dart';
 import 'package:mama_k_app_admin/Screens/admin/babysDev/deleteBabyWeek.dart';
 import 'package:mama_k_app_admin/models/babyModel.dart';
-import 'package:mama_k_app_admin/services/databaseService.dart';
 
 class BabysDev extends StatefulWidget {
   @override
@@ -9,8 +9,7 @@ class BabysDev extends StatefulWidget {
 }
 
 class _BabysDevState extends State<BabysDev> {
-  DatabaseService _databaseService = DatabaseService();
-  Stream userStream;
+  Future userStream;
   Baby babyWeek = Baby();
 
   @override
@@ -158,10 +157,13 @@ class _BabysDevState extends State<BabysDev> {
                   color: Colors.black26,
                 ),
               ),
-              onTap: () {
-                userStream = _databaseService.getBabyWeekForAdmin(week);
-                print("button");
-                
+              onTap: () {       
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BabyDevAdd(week),
+                  ),
+                );
               },
             ),
           ],
