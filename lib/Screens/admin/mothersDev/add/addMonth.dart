@@ -19,7 +19,7 @@ class _AddMonthState extends State<AddMonth> {
   @override
   void initState() {
     super.initState();
-    userStream = _databaseService.getBabyWeekForAdmin(this.widget.month);
+    userStream = _databaseService.getMomMOnthForAdmin(this.widget.month);
   }
 
   @override
@@ -29,13 +29,8 @@ class _AddMonthState extends State<AddMonth> {
       stream: userStream,
       builder: (context, currentStream) {
         if (currentStream.hasData) {
-          print("1");
-          // motherMonth.imageURL = currentStream.data["imageURL"];
-        } else {
-          print("2");
-        }
-        print("3");
-        return SafeArea(
+          motherMonth.imageURL = currentStream.data["imageURL"];
+          return SafeArea(
           child: Scaffold(
             body: SingleChildScrollView(
               child: Container(
@@ -171,6 +166,15 @@ class _AddMonthState extends State<AddMonth> {
             ),
           ),
         );
+        } else {
+          return SafeArea(
+            child: Scaffold(
+              body: Container(
+                child: Text("Loading"),
+              ),
+            ),
+          );
+        }        
       },
     );
   }
