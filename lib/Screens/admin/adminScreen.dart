@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mama_k_app_admin/Screens/admin/babysDev/babysDev.dart';
 import 'package:mama_k_app_admin/Screens/admin/mothersDev/mothersDev.dart';
+import 'package:mama_k_app_admin/services/databaseService.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -8,6 +9,8 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
+  DatabaseService _databaseService = DatabaseService();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -86,7 +89,23 @@ class _AdminScreenState extends State<AdminScreen> {
                       ),
                     ),
                   ],
-                )
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      width: 150.0,
+                      height: 100.0,
+                      child: RaisedButton(
+                        child: Text("inital Start"),
+                        onPressed: () {
+                          _databaseService.initialStart2();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
