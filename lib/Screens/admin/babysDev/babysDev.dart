@@ -9,7 +9,6 @@ class BabysDev extends StatefulWidget {
 }
 
 class _BabysDevState extends State<BabysDev> {
-  Future userStream;
   Baby babyWeek = Baby();
 
   @override

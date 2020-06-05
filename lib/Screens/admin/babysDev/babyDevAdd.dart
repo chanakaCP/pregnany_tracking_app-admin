@@ -227,7 +227,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                                   onPressed: () {
                                     if (this.size != null) this.babyWeek.size = this.size;
                                     if (this.weight != null) this.babyWeek.weight = this.weight;
-                                    if (this.description != null) this.babyWeek.tipDescription = this.description;
+                                    if (this.size != null) this.babyWeek.tipDescription = this.description;
                                     if (_formKey.currentState.validate()) {
                                       this.babyWeek.imageURL = "image Url need to be created";
                                       _databaseService.insertBabyWeek(this.babyWeek);
