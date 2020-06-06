@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mama_k_app_admin/models/babyModel.dart';
+import 'package:mama_k_app_admin/models/mainTopic.dart';
 import 'package:mama_k_app_admin/models/motherMonthModel.dart';
 import 'package:mama_k_app_admin/models/motherWeekModel.dart';
 
@@ -48,7 +49,6 @@ class DatabaseService {
     );
   }
 
-
   Stream<dynamic> getMomWeekForAdmin(int week) {
     return firestoreInstance.collection('momsInWeek').doc("week" + week.toString()).snapshots();
   }
@@ -64,7 +64,6 @@ class DatabaseService {
   deleteMomMonth(int month) {
     return firestoreInstance.collection("momsInMonth").doc("month" + month.toString()).delete();
   }
-
 
 // Initial document setup
   initialStart1() async {
@@ -103,5 +102,31 @@ class DatabaseService {
     }
 
     print('done');
+  }
+
+// TIPS
+
+  insertMainTopic(MainTopic mainTopic) async {
+    await firestoreInstance.collection('tips').doc(mainTopic.id).set(
+      {
+        'id': mainTopic.id,
+        'title': mainTopic.title,
+        'description': mainTopic.description,
+        'imageURL': "need to be update",
+      },
+    );
+  }
+
+  Stream<dynamic> getTipCollection() {
+    return firestoreInstance.collection("tips").snapshots();
+  }
+
+  deleteMainTopic(String id) {
+    return firestoreInstance.collection("tips").doc(id).delete();
+  }
+
+  String randomId() {
+    var _randomId = firestoreInstance.collection('tips').doc().id;
+    return _randomId;
   }
 }
