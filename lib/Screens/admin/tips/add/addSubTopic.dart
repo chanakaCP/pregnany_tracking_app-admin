@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:mama_k_app_admin/Screens/admin/tips/subTopic/subTopic.dart';
 import 'package:mama_k_app_admin/models/mainTopic.dart';
+import 'package:mama_k_app_admin/models/subTopicModel.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';
 
-class AddMainTopic extends StatefulWidget {
-  MainTopic mainTopic = MainTopic();
-  AddMainTopic(this.mainTopic);
+class AddSubTopic extends StatefulWidget {
+  MainTopic mainTopic = MainTopic() ;
+  SubTopicModel subTopic = SubTopicModel();
+  AddSubTopic(this.mainTopic,this.subTopic);
   @override
-  _AddMainTopicState createState() => _AddMainTopicState();
+  _AddSubTopicState createState() => _AddSubTopicState();
 }
 
-class _AddMainTopicState extends State<AddMainTopic> {
+class _AddSubTopicState extends State<AddSubTopic> {
   final _formKey = GlobalKey<FormState>();
   DatabaseService _databaseService = DatabaseService();
-  MainTopic newTopic = MainTopic();
+  SubTopicModel newTopic = SubTopicModel();
   String id;
   String title;
   String description;
-  String imageURL;
   @override
   Widget build(BuildContext context) {
-    this.newTopic.id = this.widget.mainTopic.id;
-    this.newTopic.title = this.widget.mainTopic.title;
-    this.newTopic.description = this.widget.mainTopic.description;
-    this.newTopic.imageURL = this.widget.mainTopic.imageURL;
+    this.newTopic.id = this.widget.subTopic.id;
+    this.newTopic.title = this.widget.subTopic.title;
+    this.newTopic.description = this.widget.subTopic.description;
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -55,9 +55,9 @@ class _AddMainTopicState extends State<AddMainTopic> {
                       },
                     ),
                     Container(
-                      width: (this.widget.mainTopic.title != "") ? 100.0 : 150.0,
+                      width:200.0,
                       child: Text(
-                        (this.widget.mainTopic.title != "") ? "Update Topic" : " Add new Topic",
+                         (this.widget.subTopic.title != '') ? "Update Topic" : "Add New Topic",
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
                           fontSize: 18.0,
@@ -65,35 +65,6 @@ class _AddMainTopicState extends State<AddMainTopic> {
                         ),
                       ),
                     ),
-                    (this.newTopic.title != "") ?
-                    InkWell(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.2),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(50.0),
-                          ),
-                        ),
-                        child: Text(
-                          "Sub Topics",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18.0,
-                            color: Colors.green[900],
-                          ),
-                        ),
-                      ),
-                      onTap: () {
-                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SubTopic(this.widget.mainTopic),
-                          ),
-                        );
-                      },
-                    ) :
-                    Container(),
                   ],
                 ),
                 SizedBox(height: 100.0),
@@ -105,7 +76,7 @@ class _AddMainTopicState extends State<AddMainTopic> {
                         Container(
                           child: TextFormField(
                             maxLines: null,
-                            initialValue: this.widget.mainTopic.title,
+                            initialValue: this.widget.subTopic.title,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10.0),
                               enabledBorder: OutlineInputBorder(
@@ -139,7 +110,7 @@ class _AddMainTopicState extends State<AddMainTopic> {
                         Container(
                           child: TextFormField(
                             maxLines: null,
-                            initialValue: this.widget.mainTopic.description,
+                            initialValue: this.widget.subTopic.description,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10.0),
                               enabledBorder: OutlineInputBorder(
@@ -184,11 +155,11 @@ class _AddMainTopicState extends State<AddMainTopic> {
                             ),
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
-                                this.newTopic.id = this.widget.mainTopic.id;
+                                this.newTopic.id = this.widget.subTopic.id;
                                 if (this.title != null) this.newTopic.title = this.title;
                                 if (this.description != null)
                                   this.newTopic.description = this.description;
-                                _databaseService.insertMainTopic(this.newTopic);
+                                _databaseService.insertSubTopic(this.widget.mainTopic.id, this.newTopic);
                                 Navigator.pop(context);
                               }
                             },
