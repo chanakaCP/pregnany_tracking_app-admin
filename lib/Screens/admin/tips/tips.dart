@@ -73,7 +73,10 @@ class _TipsState extends State<Tips> {
                       ),
                       onTap: () {
                         MainTopic mainTopic = MainTopic();
-                        mainTopic.id = _databaseService.randomId();
+                        mainTopic.id = _databaseService.randomIdForMain();
+                        mainTopic.title = "";
+                        mainTopic.description = "";
+                        mainTopic.imageURL = "";
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -86,7 +89,6 @@ class _TipsState extends State<Tips> {
                 ),
                 SizedBox(height: 20.0),
                 Container(
-                  // color: Colors.black,
                   child: TipList(),
                   height: 500.0,
                 ),
