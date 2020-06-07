@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mama_k_app_admin/models/babyModel.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';
+import 'package:path/path.dart' as Path;
+import 'package:image_picker/image_picker.dart';
 
 class BabyDevAdd extends StatefulWidget {
   int week;
@@ -15,10 +19,28 @@ class _BabyDevAddState extends State<BabyDevAdd> {
   Stream userStream;
   Baby babyWeek = Baby();
   double size, weight;
-  String description;
+  String description, profileImageURL;
+  File _imageFile;
+
+  Future getImage() async {
+    await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
+      setState(() {
+        _imageFile = image;
+        profileImageURL = image.path;
+      });
+    });
+  }
+
+  clearImage() {
+    setState(() {
+      _imageFile = null;
+      profileImageURL = null;
+    });
+  }
 
   @override
   void initState() {
+    _imageFile = null;
     userStream = _databaseService.getBabyWeekForAdmin(this.widget.week);
     super.initState();
   }
@@ -33,6 +55,9 @@ class _BabyDevAddState extends State<BabyDevAdd> {
           this.babyWeek.size = currentStream.data['size'];
           this.babyWeek.weight = currentStream.data['weight'];
           this.babyWeek.tipDescription = currentStream.data['tipDescription'];
+          this.babyWeek.imageURL = currentStream.data['imageURL'];
+          profileImageURL = currentStream.data['imageURL'];
+
           return SafeArea(
             child: Scaffold(
               body: SingleChildScrollView(
@@ -92,7 +117,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 100.0),
+                      SizedBox(height: 50.0),
                       Container(
                         child: Form(
                           key: _formKey,
@@ -172,7 +197,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                               SizedBox(height: 20.0),
                               Container(
                                 child: TextFormField(
-                                maxLines: null,
+                                  maxLines: null,
                                   initialValue: (this.babyWeek.tipDescription != '')
                                       ? this.babyWeek.tipDescription
                                       : null,
@@ -205,7 +230,86 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                                   },
                                 ),
                               ),
-                              SizedBox(height: 30.0),
+                              SizedBox(height: 20.0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(
+                                      "Pick a Image",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 17.0,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 50.0),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green.withOpacity(0.2),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: InkWell(
+                                      child: Icon(
+                                        Icons.add_a_photo,
+                                        size: 20.0,
+                                        color: Colors.green[800],
+                                      ),
+                                      onTap: () {
+                                        getImage();
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 20.0),
+                                  (profileImageURL != null)
+                                  ? Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.withOpacity(0.2),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                      ),
+                                      child: InkWell(
+                                        child: Icon(
+                                          Icons.delete,
+                                          size: 20.0,
+                                          color: Colors.green[800],
+                                        ),
+                                        onTap: () {
+                                          clearImage();
+                                        },
+                                      ),
+                                    )
+                                  : Container(),
+                                ],
+                              ),
+                              SizedBox(height: 20.0),
+                              Container(
+                                height: 150.0,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.4),
+                                      spreadRadius: 3,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                  image: DecorationImage(
+                                    image: loadImage(),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                )
+                              ),           
+                              SizedBox(height: 20.0),
                               Container(
                                 height: 45.0,
                                 width: double.infinity,
@@ -227,16 +331,28 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                                   onPressed: () {
                                     if (this.size != null) this.babyWeek.size = this.size;
                                     if (this.weight != null) this.babyWeek.weight = this.weight;
-                                    if (this.size != null) this.babyWeek.tipDescription = this.description;
+                                    if (this.size != null)
+                                      this.babyWeek.tipDescription = this.description;
                                     if (_formKey.currentState.validate()) {
-                                      this.babyWeek.imageURL = "image Url need to be created";
-                                      _databaseService.insertBabyWeek(this.babyWeek);
-                                      Navigator.pop(context);
+                                      if (_imageFile != null) {
+                                        String imagePath = "babyWeek/week" +
+                                            this.widget.week.toString() +
+                                            "-" +
+                                            Path.basename(_imageFile.path).toString();
+                                        _databaseService.uploadImage(
+                                            imagePath, _imageFile, this.babyWeek);
+                                        // } else {
+                                        // _databaseService.createUser(this.widget.currentUser);
+                                      }
+
+                                      // this.babyWeek.imageURL = "image Url need to be created";
+                                      // _databaseService.insertBabyWeek(this.babyWeek);
+                                      // Navigator.pop(context);
                                     }
                                   },
                                 ),
                               ),
-                              SizedBox(height:20.0),
+                              SizedBox(height: 20.0),
                             ],
                           ),
                         ),
@@ -258,5 +374,18 @@ class _BabyDevAddState extends State<BabyDevAdd> {
         }
       },
     );
+  }
+
+  loadImage() {
+    if (profileImageURL == "" && _imageFile == null) {
+      print("1");
+      return AssetImage("images/imageSelect.png"); // load defaluld icon
+    } else if (_imageFile != null) {
+      print("2");
+      return AssetImage(_imageFile.path); // load selected image
+    } else {
+      print("3");
+      return NetworkImage(this.babyWeek.imageURL); // load from database
+    }
   }
 }
