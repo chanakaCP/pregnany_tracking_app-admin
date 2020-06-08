@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mama_k_app_admin/models/babyModel.dart';
 import 'package:mama_k_app_admin/models/mainTopic.dart';
 import 'package:mama_k_app_admin/models/motherMonthModel.dart';
 import 'package:mama_k_app_admin/models/motherWeekModel.dart';
+import 'package:mama_k_app_admin/models/subTopicModel.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DatabaseService {
   final firestoreInstance = FirebaseFirestore.instance;
+  final storageInstance = FirebaseStorage.instance;
 
 //Baby's Development
   insertBabyWeek(Baby baby) async {
@@ -117,16 +122,64 @@ class DatabaseService {
     );
   }
 
+  insertSubTopic(String mainTopicId, SubTopicModel subTopic) async {
+    await firestoreInstance
+        .collection('tips')
+        .doc(mainTopicId)
+        .collection("subTopics")
+        .doc(subTopic.id)
+        .set(
+      {
+        'id': subTopic.id,
+        'title': subTopic.title,
+        'description': subTopic.description,
+      },
+    );
+  }
+
   Stream<dynamic> getTipCollection() {
     return firestoreInstance.collection("tips").snapshots();
+  }
+
+  Stream<dynamic> getSubTopicCollection(String docId) {
+    return firestoreInstance.collection("tips").doc(docId).collection("subTopics").snapshots();
   }
 
   deleteMainTopic(String id) {
     return firestoreInstance.collection("tips").doc(id).delete();
   }
 
-  String randomId() {
-    var _randomId = firestoreInstance.collection('tips').doc().id;
+  deleteSubTopic(String mainTopic, String subTopic) {
+    return firestoreInstance
+        .collection("tips")
+        .doc(mainTopic)
+        .collection("subTopics")
+        .doc(subTopic)
+        .delete();
+  }
+
+  String randomIdForMain() {
+    var _randomId = firestoreInstance.collection("tips").doc().id;
     return _randomId;
+  }
+
+  String randomIdForSub(String mainTopicId) {
+    var _randomId =
+        firestoreInstance.collection("tips").doc(mainTopicId).collection("subTopics").doc().id;
+    print(_randomId);
+    return _randomId;
+  }
+
+
+  Future uploadImage(String filePath, File file,Baby baby) async {
+    // need to be delete prev: image
+    StorageReference storageReference = storageInstance.ref();
+    StorageUploadTask uploadTask = storageReference.child(filePath).putFile(file);
+
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    taskSnapshot.ref.getDownloadURL().then((downloadURL) {
+      baby.imageURL = downloadURL;
+      insertBabyWeek(baby);
+    });
   }
 }
