@@ -19,14 +19,14 @@ class _BabyDevAddState extends State<BabyDevAdd> {
   Stream userStream;
   Baby babyWeek = Baby();
   double size, weight;
-  String description, profileImageURL;
+  String description, imageURL;
   File _imageFile;
 
   Future getImage() async {
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       setState(() {
         _imageFile = image;
-        profileImageURL = image.path;
+        imageURL = image.path;
       });
     });
   }
@@ -34,7 +34,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
   clearImage() {
     setState(() {
       _imageFile = null;
-      profileImageURL = null;
+      imageURL = null;
     });
   }
 
@@ -56,7 +56,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
           this.babyWeek.weight = currentStream.data['weight'];
           this.babyWeek.tipDescription = currentStream.data['tipDescription'];
           this.babyWeek.imageURL = currentStream.data['imageURL'];
-          profileImageURL = currentStream.data['imageURL'];
+          imageURL = currentStream.data['imageURL'];
 
           return SafeArea(
             child: Scaffold(
@@ -265,50 +265,49 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                                     ),
                                   ),
                                   SizedBox(width: 20.0),
-                                  (profileImageURL != null)
-                                  ? Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green.withOpacity(0.2),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0),
-                                        ),
-                                      ),
-                                      child: InkWell(
-                                        child: Icon(
-                                          Icons.delete,
-                                          size: 20.0,
-                                          color: Colors.green[800],
-                                        ),
-                                        onTap: () {
-                                          clearImage();
-                                        },
-                                      ),
-                                    )
-                                  : Container(),
+                                  (imageURL != null)
+                                      ? Container(
+                                          padding:
+                                              EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.green.withOpacity(0.2),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0),
+                                            ),
+                                          ),
+                                          child: InkWell(
+                                            child: Icon(
+                                              Icons.delete,
+                                              size: 20.0,
+                                              color: Colors.green[800],
+                                            ),
+                                            onTap: () {
+                                              clearImage();
+                                            },
+                                          ),
+                                        )
+                                      : Container(),
                                 ],
                               ),
                               SizedBox(height: 20.0),
                               Container(
-                                height: 150.0,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
-                                      spreadRadius: 3,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 3),
+                                  height: 150.0,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        spreadRadius: 3,
+                                        blurRadius: 10,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
+                                    image: DecorationImage(
+                                      image: loadImage(),
+                                      fit: BoxFit.cover,
                                     ),
-                                  ],
-                                  image: DecorationImage(
-                                    image: loadImage(),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                                )
-                              ),           
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  )),
                               SizedBox(height: 20.0),
                               Container(
                                 height: 45.0,
@@ -340,14 +339,12 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                                             "-" +
                                             Path.basename(_imageFile.path).toString();
                                         _databaseService.uploadImage(
-                                            imagePath, _imageFile, this.babyWeek);
-                                        // } else {
-                                        // _databaseService.createUser(this.widget.currentUser);
+                                            imagePath, _imageFile, this.babyWeek, context);
+                                      } else {
+                                        print("image can't be null");
                                       }
-
-                                      // this.babyWeek.imageURL = "image Url need to be created";
-                                      // _databaseService.insertBabyWeek(this.babyWeek);
-                                      // Navigator.pop(context);
+                                    } else {
+                                      print("form validate fail");
                                     }
                                   },
                                 ),
@@ -377,14 +374,11 @@ class _BabyDevAddState extends State<BabyDevAdd> {
   }
 
   loadImage() {
-    if (profileImageURL == "" && _imageFile == null) {
-      print("1");
+    if (imageURL == "" && _imageFile == null) {
       return AssetImage("images/imageSelect.png"); // load defaluld icon
     } else if (_imageFile != null) {
-      print("2");
       return AssetImage(_imageFile.path); // load selected image
     } else {
-      print("3");
       return NetworkImage(this.babyWeek.imageURL); // load from database
     }
   }

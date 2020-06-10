@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mama_k_app_admin/Screens/admin/babysDev/babyDevAdd.dart';
-import 'package:mama_k_app_admin/Screens/admin/babysDev/deleteBabyWeek.dart';
+import 'package:mama_k_app_admin/Screens/babysDev/babyDevAdd.dart';
+import 'package:mama_k_app_admin/Screens/babysDev/deleteBabyWeek.dart';
 import 'package:mama_k_app_admin/models/babyModel.dart';
 
 class BabysDev extends StatefulWidget {
