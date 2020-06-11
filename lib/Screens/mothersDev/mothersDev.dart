@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mama_k_app_admin/Screens/admin/mothersDev/add/addMonth.dart';
-import 'package:mama_k_app_admin/Screens/admin/mothersDev/add/addWeek.dart';
-import 'package:mama_k_app_admin/Screens/admin/mothersDev/delete/deleteMonth.dart';
-import 'package:mama_k_app_admin/Screens/admin/mothersDev/delete/deleteWeek.dart';
+import 'package:mama_k_app_admin/Screens/mothersDev/add/addMonth.dart';
+import 'package:mama_k_app_admin/Screens/mothersDev/add/addWeek.dart';
+import 'package:mama_k_app_admin/Screens/mothersDev/delete/deleteMonth.dart';
+import 'package:mama_k_app_admin/Screens/mothersDev/delete/deleteWeek.dart';
 
 class MothersDev extends StatefulWidget {
   @override
