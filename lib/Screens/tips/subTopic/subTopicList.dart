@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mama_k_app_admin/Screens/admin/tips/add/addSubTopic.dart';
-import 'package:mama_k_app_admin/Screens/admin/tips/delete/deleteSubTopic.dart';
+import 'package:mama_k_app_admin/Screens/tips/add/addSubTopic.dart';
+import 'package:mama_k_app_admin/Screens/tips/delete/deleteSubTopic.dart';
 import 'package:mama_k_app_admin/models/mainTopic.dart';
 import 'package:mama_k_app_admin/models/subTopicModel.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';

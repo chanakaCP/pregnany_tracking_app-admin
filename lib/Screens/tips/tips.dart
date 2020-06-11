@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mama_k_app_admin/Screens/admin/tips/add/addMainTopic.dart';
-import 'package:mama_k_app_admin/Screens/admin/tips/tipList.dart';
+import 'package:mama_k_app_admin/Screens/tips/add/addMainTopic.dart';
+import 'package:mama_k_app_admin/Screens/tips/tipList.dart';
 import 'package:mama_k_app_admin/models/mainTopic.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';
 
