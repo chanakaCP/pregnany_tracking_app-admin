@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mama_k_app_admin/Screens/admin/babysDev/babysDev.dart';
-import 'package:mama_k_app_admin/Screens/admin/mothersDev/mothersDev.dart';
-import 'package:mama_k_app_admin/Screens/admin/tips/tips.dart';
+import 'package:mama_k_app_admin/Screens/babysDev/babysDev.dart';
+import 'package:mama_k_app_admin/Screens/mothersDev/mothersDev.dart';
+import 'package:mama_k_app_admin/Screens/tips/tips.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';
 
 class AdminScreen extends StatefulWidget {
@@ -108,7 +108,7 @@ class _AdminScreenState extends State<AdminScreen> {
                       child: RaisedButton(
                         child: Text("inital Start"),
                         onPressed: () {
-                          _databaseService.initialStart2();
+                          _databaseService.initialStart1();
                         },
                       ),
                     ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'admin/adminScreen.dart';
-import 'admin/babysDev/babysDev.dart';
+import 'adminScreen.dart';
+import 'babysDev/babysDev.dart';
 
 class App extends StatelessWidget {
   @override
