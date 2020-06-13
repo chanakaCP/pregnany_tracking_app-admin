@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mama_k_app_admin/models/babyModel.dart';
 import 'package:mama_k_app_admin/models/mainTopic.dart';
 import 'package:mama_k_app_admin/models/motherMonthModel.dart';
@@ -13,7 +14,7 @@ class DatabaseService {
   final storageInstance = FirebaseStorage.instance;
 
 //Baby's Development
-  insertBabyWeek(Baby baby) async {
+  insertBabyWeek(Baby baby, BuildContext context) async {
     await firestoreInstance.collection('babyWeek').doc("week" + baby.week.toString()).set(
       {
         'week': baby.week,
@@ -23,6 +24,7 @@ class DatabaseService {
         'tipDescription': baby.tipDescription,
       },
     );
+    Navigator.of(context).pop();
   }
 
   Stream<dynamic> getBabyWeekForAdmin(int week) {
@@ -45,13 +47,14 @@ class DatabaseService {
     );
   }
 
-  insertMotherMonth(MotherInMonth month) async {
+  insertMotherMonth(MotherInMonth month, BuildContext context) async {
     await firestoreInstance.collection('momsInMonth').doc("month" + month.month.toString()).set(
       {
         'month': month.month,
         'imageURL': month.imageURL,
       },
     );
+    Navigator.of(context).pop();
   }
 
   Stream<dynamic> getMomWeekForAdmin(int week) {
@@ -82,8 +85,8 @@ class DatabaseService {
           'tipDescription': '',
         },
       );
-      print("done");
     }
+    print("done");
   }
 
   initialStart2() async {
@@ -105,13 +108,12 @@ class DatabaseService {
         },
       );
     }
-
     print('done');
   }
 
 // TIPS
 
-  insertMainTopic(MainTopic mainTopic) async {
+  insertMainTopic(MainTopic mainTopic, BuildContext context) async {
     await firestoreInstance.collection('tips').doc(mainTopic.id).set(
       {
         'id': mainTopic.id,
@@ -120,6 +122,7 @@ class DatabaseService {
         'imageURL': "need to be update",
       },
     );
+    Navigator.of(context).pop();
   }
 
   insertSubTopic(String mainTopicId, SubTopicModel subTopic) async {
@@ -166,20 +169,24 @@ class DatabaseService {
   String randomIdForSub(String mainTopicId) {
     var _randomId =
         firestoreInstance.collection("tips").doc(mainTopicId).collection("subTopics").doc().id;
-    print(_randomId);
     return _randomId;
   }
 
-
-  Future uploadImage(String filePath, File file,Baby baby) async {
+  Future uploadImage(String filePath, File file, dynamic model, BuildContext context) async {
     // need to be delete prev: image
     StorageReference storageReference = storageInstance.ref();
     StorageUploadTask uploadTask = storageReference.child(filePath).putFile(file);
 
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     taskSnapshot.ref.getDownloadURL().then((downloadURL) {
-      baby.imageURL = downloadURL;
-      insertBabyWeek(baby);
+      model.imageURL = downloadURL;
+      if (model is Baby) {
+        insertBabyWeek(model, context);
+      } else if (model is MotherInMonth) {
+        insertMotherMonth(model, context);
+      } else if (model is MainTopic) {
+        insertMainTopic(model, context);
+      }
     });
   }
 }
