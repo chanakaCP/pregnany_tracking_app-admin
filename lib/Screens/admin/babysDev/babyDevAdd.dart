@@ -3,8 +3,8 @@ import 'package:mama_k_app_admin/models/babyModel.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';
 
 class BabyDevAdd extends StatefulWidget {
-  int week;
-  BabyDevAdd(this.week);
+  Baby babyWeek = Baby();
+  BabyDevAdd(this.babyWeek);
   @override
   _BabyDevAddState createState() => _BabyDevAddState();
 }
@@ -13,29 +13,19 @@ class _BabyDevAddState extends State<BabyDevAdd> {
   final _formKey = GlobalKey<FormState>();
   DatabaseService _databaseService = DatabaseService();
   Stream userStream;
-  Baby babyWeek = Baby();
 
   @override
   void initState() {
     super.initState();
-    userStream = _databaseService.getBabyWeekForAdmin(this.widget.week);
   }
 
   @override
   Widget build(BuildContext context) {
-    babyWeek.week = this.widget.week;
+    
     return StreamBuilder(
       stream: userStream,
       builder: (context, currentStream) {
-        if (currentStream.hasData) {
-          print("1");
-          babyWeek.size = currentStream.data["size"];
-          babyWeek.weight = currentStream.data["weight"];
-          babyWeek.tipDescription = currentStream.data["tipDescription"];
-        } else {
-          print("2");
-        }
-        print("3");
+        
         return SafeArea(
           child: Scaffold(
             body: SingleChildScrollView(
@@ -85,7 +75,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                             ),
                           ),
                           child: Text(
-                            "Week " + this.widget.week.toString(),
+                            "Week " + this.widget.babyWeek.week.toString(),
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 18.0,
@@ -103,7 +93,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                           children: <Widget>[
                             Container(
                               child: TextFormField(
-                                initialValue: babyWeek.size.toString(),
+                                initialValue: this.widget.babyWeek.size.toString(),
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.all(10.0),
@@ -123,7 +113,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                                 ),
                                 onChanged: (value) {
                                   setState(() {
-                                    this.babyWeek.size = double.parse(value);
+                                    this.widget.babyWeek.size = double.parse(value);
                                   });
                                 },
                                 validator: (value) {
@@ -137,7 +127,7 @@ class _BabyDevAddState extends State<BabyDevAdd> {
                             SizedBox(height: 20.0),
                             Container(
                               child: TextFormField(
-                                  initialValue: babyWeek.weight.toString(),
+                                  initialValue: this.widget.babyWeek.weight.toString(),
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.all(10.0),

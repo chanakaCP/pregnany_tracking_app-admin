@@ -20,12 +20,7 @@ class DatabaseService {
   }
 
   Stream<dynamic> getBabyWeekForAdmin(int week) {
-    return firestoreInstance
-        .collection("babyWeek")
-        .doc("week" + week.toString())
-        .get()
-        .then((value) => print(value.data()))
-        .asStream();
+    return firestoreInstance.collection("babyWeek").doc("week" + week.toString()).snapshots();  
   }
 
   deleteBabyWeek(int week) {

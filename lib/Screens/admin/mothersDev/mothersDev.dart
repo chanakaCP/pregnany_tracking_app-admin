@@ -3,7 +3,6 @@ import 'package:mama_k_app_admin/Screens/admin/mothersDev/add/addMonth.dart';
 import 'package:mama_k_app_admin/Screens/admin/mothersDev/add/addWeek.dart';
 import 'package:mama_k_app_admin/Screens/admin/mothersDev/delete/deleteMonth.dart';
 import 'package:mama_k_app_admin/Screens/admin/mothersDev/delete/deleteWeek.dart';
-import 'package:mama_k_app_admin/services/databaseService.dart';
 
 class MothersDev extends StatefulWidget {
   @override
@@ -12,7 +11,6 @@ class MothersDev extends StatefulWidget {
 
 class _MothersDevState extends State<MothersDev> with SingleTickerProviderStateMixin {
   TabController _tabController;
-  DatabaseService _databaseService = DatabaseService();
 
   @override
   void initState() {
@@ -238,7 +236,6 @@ class _MothersDevState extends State<MothersDev> with SingleTickerProviderStateM
               ),
             ),
           );
-          ;
         },
       ),
     );
