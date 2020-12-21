@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:mama_k_app_admin/Screens/mothersDev/add/addMonth.dart';
-import 'package:mama_k_app_admin/Screens/mothersDev/add/addWeek.dart';
-import 'package:mama_k_app_admin/Screens/mothersDev/delete/deleteMonth.dart';
-import 'package:mama_k_app_admin/Screens/mothersDev/delete/deleteWeek.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomIconButton.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomText.dart';
+import 'package:mama_k_app_admin/Screens/mothersDev/CustomTabView.dart';
+import 'package:mama_k_app_admin/app/sizeConfig.dart';
 
 class MothersDev extends StatefulWidget {
   @override
   _MothersDevState createState() => _MothersDevState();
 }
 
-class _MothersDevState extends State<MothersDev> with SingleTickerProviderStateMixin {
+class _MothersDevState extends State<MothersDev>
+    with SingleTickerProviderStateMixin {
+  double blockHeight = SizeConfig.safeBlockVertical;
+  double blockWidth = SizeConfig.safeBlockHorizontal;
+
   TabController _tabController;
 
   @override
@@ -24,97 +28,72 @@ class _MothersDevState extends State<MothersDev> with SingleTickerProviderStateM
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
+            padding: EdgeInsets.symmetric(
+              vertical: blockHeight * 5,
+            ),
+            width: double.infinity,
             child: Column(
               children: <Widget>[
-                Container(
-                  // padding: EdgeInsets.only(top: 25.0, left: 30.0, right: 30.0),
-                  width: double.infinity,
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          InkWell(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 30.0, top: 25.0),
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                color: Colors.green[200].withOpacity(0.4),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(25.0),
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: Colors.black26,
-                              ),
-                            ),
-                            onTap: () {
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        CustomIconButton(
+                            icon: Icons.arrow_back,
+                            callback: () {
                               Navigator.pop(context);
-                            },
+                            }),
+                        Container(
+                          child: CustomText(
+                            text: "Mother's development ",
+                            size: blockWidth * 5.5,
                           ),
-                          Container(
-                            margin: EdgeInsets.only(right: 30.0, top: 25.0),
-                            child: Text(
-                              "Mother's development ",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.0,
-                                color: Colors.black54,
-                              ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: blockHeight * 2),
+                    Container(
+                      height: blockHeight * 6,
+                      width: double.infinity,
+                      child: TabBar(
+                        unselectedLabelColor: Colors.black,
+                        labelColor: Colors.green,
+                        indicatorColor: Colors.green,
+                        indicatorWeight: blockWidth * 1,
+                        controller: _tabController,
+                        isScrollable: true,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        labelPadding:
+                            EdgeInsets.symmetric(horizontal: blockHeight * 8),
+                        tabs: [
+                          Tab(
+                            child: CustomText(
+                              text: "Weekly",
+                              size: blockWidth * 5,
+                              weight: FontWeight.w400,
+                            ),
+                          ),
+                          Tab(
+                            child: CustomText(
+                              text: "Monthly",
+                              size: blockWidth * 5,
+                              weight: FontWeight.w400,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 10.0),
-                      Container(
-                        // color: Colors.green[50],
-                        height: 40.0,
-                        width: double.infinity,
-                        child: TabBar(
-                          unselectedLabelColor: Colors.black,
-                          labelColor: Colors.green,
-                          indicatorColor: Colors.green,
-                          indicatorWeight: 3.0,
-                          controller: _tabController,
-                          isScrollable: true,
-                          indicatorSize: TabBarIndicatorSize.label,
-                          labelPadding: EdgeInsets.symmetric(horizontal: 60.0),
-                          tabs: [
-                            Tab(
-                              child: Text(
-                                "Weekly",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ),
-                            Tab(
-                              child: Text(
-                                "Monthly",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16.0,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // SizedBox(height: 20.0),
-                    ],
-                  ),
+                    ),
+                    // SizedBox(height: 20.0),
+                  ],
                 ),
                 Container(
-                  height: 500.0,
+                  height: blockHeight * 80,
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-                      buildList("weekly"),
-                      buildList("monthly"),
+                      CustomTabView(type: "weekly"),
+                      CustomTabView(type: "monthly"),
                     ],
                   ),
                 ),
@@ -122,121 +101,6 @@ class _MothersDevState extends State<MothersDev> with SingleTickerProviderStateM
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  buildList(String type) {
-    int itemCount;
-    String categoryName;
-    if (type == "weekly") {
-      itemCount = 40;
-      categoryName = "Week ";
-    } else if (type == "monthly") {
-      itemCount = 10;
-      categoryName = "Month ";
-    }
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30.0),
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height * 0.22,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: itemCount,
-        itemBuilder: (context, position) {
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: 6.0),
-            width: double.infinity,
-            child: Container(
-              padding: EdgeInsets.only(left: 20.0, right: 10.0, top: 17.0, bottom: 17.0),
-              decoration: BoxDecoration(
-                color: Colors.lightGreen[100].withOpacity(0.7),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(15.0),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    width: 175.0,
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          categoryName + (position + 1).toString(),
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 18.0,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        SizedBox(width: 10.0),
-                        // Icon(
-                        //   (allSet) ? Icons.done_all : Icons.close,
-                        //   color: (allSet) ? Colors.blue[500] : Colors.red[300],
-                        // ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    child: Container(
-                      margin: EdgeInsets.only(right: 1.0),
-                      padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.red[200].withOpacity(0.4),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(25.0),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.delete_forever,
-                        color: Colors.red[300],
-                      ),
-                    ),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return (type == "weekly")
-                              ? DeleteWeek(position + 1)
-                              : DeleteMonth(position + 1);
-                        },
-                      );
-                    },
-                  ),
-                  SizedBox(width: 20.0),
-                  InkWell(
-                    child: Container(
-                      margin: EdgeInsets.only(right: 1.0),
-                      padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green[200].withOpacity(0.4),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(25.0),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.black26,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              (type == "weekly") ? AddWeek(position + 1) : AddMonth(position + 1),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
       ),
     );
   }

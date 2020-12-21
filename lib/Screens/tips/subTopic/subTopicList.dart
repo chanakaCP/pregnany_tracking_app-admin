@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomDeleteModal.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomIconButton.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomLoading.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomText.dart';
 import 'package:mama_k_app_admin/Screens/tips/add/addSubTopic.dart';
-import 'package:mama_k_app_admin/Screens/tips/delete/deleteSubTopic.dart';
+import 'package:mama_k_app_admin/app/sizeConfig.dart';
 import 'package:mama_k_app_admin/models/mainTopic.dart';
 import 'package:mama_k_app_admin/models/subTopicModel.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';
@@ -12,20 +16,28 @@ class SubTopicList extends StatelessWidget {
   DatabaseService db = DatabaseService();
   Stream str;
 
+  double blockHeight = SizeConfig.safeBlockVertical;
+  double blockWidth = SizeConfig.safeBlockHorizontal;
+
+  onClickDelte(String mainId, String subId, BuildContext context) {
+    db.deleteSubTopic(mainId, subId);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     str = db.getSubTopicCollection(this.mainTopic.id);
     return StreamBuilder<QuerySnapshot>(
       stream: str,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting ){
-          return Text("waiting for Loadin data");
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CustomLoading();
         } else {
           return ListView(
             scrollDirection: Axis.vertical,
             children: getExpenseItems(snapshot, context),
-          ); 
-        }    
+          );
+        }
       },
     );
   }
@@ -34,52 +46,33 @@ class SubTopicList extends StatelessWidget {
     return snapshot.data.docs
         .map(
           (doc) => ListTile(
-            title: Text(
-              doc["title"],
-              style: TextStyle(fontSize: 15.0),
+            title: CustomText(
+              text: doc["title"],
+              size: blockWidth * 4,
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                InkWell(
-                  child: Container(
-                    padding: EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.red[200].withOpacity(0.4),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(25.0),
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.delete_forever,
-                      color: Colors.red[300],
-                    ),
-                  ),
-                  onTap: () {
+                SizedBox(width: blockWidth * 5),
+                CustomIconButton(
+                  icon: Icons.delete_forever,
+                  callback: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return DeleteSubTopic(mainTopic.id, doc["id"]);
+                        return CustomDeleteModal(
+                          callback: () {
+                            onClickDelte(mainTopic.id, doc["id"], context);
+                          },
+                        );
                       },
                     );
                   },
                 ),
-                SizedBox(width: 15.0),
-                InkWell(
-                  child: Container(
-                    padding: EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.green[200].withOpacity(0.4),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(25.0),
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black26,
-                    ),
-                  ),
-                  onTap: () {
+                SizedBox(width: blockWidth * 5),
+                CustomIconButton(
+                  icon: Icons.arrow_forward_ios,
+                  callback: () {
                     SubTopicModel subTopic = SubTopicModel();
                     subTopic.id = doc["id"];
                     subTopic.title = doc["title"];
@@ -87,7 +80,10 @@ class SubTopicList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddSubTopic(this.mainTopic, subTopic),
+                        builder: (context) => AddSubTopic(
+                            mainTopic: mainTopic,
+                            subTopic: subTopic,
+                            isEdit: true),
                       ),
                     );
                   },

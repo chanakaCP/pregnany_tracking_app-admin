@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mama_k_app_admin/services/databaseService.dart';
 
-class DeleteWeek extends StatefulWidget {
-  int week;
-  DeleteWeek(this.week);
-  @override
-  _DeleteWeekState createState() => _DeleteWeekState();
-}
+class CustomDeleteModal extends StatelessWidget {
+  final VoidCallback callback;
+  CustomDeleteModal({@required this.callback});
 
-class _DeleteWeekState extends State<DeleteWeek> {
-  DatabaseService _databaseService = DatabaseService();
   @override
   Widget build(BuildContext context) {
     Widget cancelButton = FlatButton(
@@ -21,14 +15,13 @@ class _DeleteWeekState extends State<DeleteWeek> {
     Widget continueButton = FlatButton(
       child: Text("DELETE"),
       onPressed: () {
-        _databaseService.deleteMomWeek(this.widget.week);
-        Navigator.of(context).pop();
+        callback();
       },
     );
 
     return AlertDialog(
       title: Text("Confirm Delete"),
-      content: Text("Are you sure you want to delete week details ?"),
+      content: Text("Are you sure you want to delete this ?"),
       actions: [
         cancelButton,
         continueButton,

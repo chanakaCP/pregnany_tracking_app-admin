@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomButton.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomIconButton.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomInputField.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomLable.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomLoading.dart';
+import 'package:mama_k_app_admin/CustomWIdgets/CustomText.dart';
+import 'package:mama_k_app_admin/app/sizeConfig.dart';
 import 'package:mama_k_app_admin/models/motherWeekModel.dart';
 import 'package:mama_k_app_admin/services/databaseService.dart';
 
@@ -10,7 +17,12 @@ class AddWeek extends StatefulWidget {
 }
 
 class _AddWeekState extends State<AddWeek> {
+  double blockHeight = SizeConfig.safeBlockVertical;
+  double blockWidth = SizeConfig.safeBlockHorizontal;
+
   final _formKey = GlobalKey<FormState>();
+  final descController = TextEditingController();
+
   DatabaseService _databaseService = DatabaseService();
   Stream userStream;
   MotherInWeek motherWeek = MotherInWeek();
@@ -22,145 +34,78 @@ class _AddWeekState extends State<AddWeek> {
     userStream = _databaseService.getMomWeekForAdmin(this.widget.week);
   }
 
+  onClickSubmit() {
+    if (_formKey.currentState.validate()) {
+      motherWeek.tipDescription = descController.text;
+      _databaseService.insertMotherWeek(motherWeek);
+      Navigator.pop(context);
+    } else {
+      // TODO: form validation failed dialog
+      print("form validate fail");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     this.motherWeek.week = this.widget.week;
     return StreamBuilder(
       stream: userStream,
       builder: (context, currentStream) {
-        if (currentStream.hasData) {
-          this.motherWeek.tipDescription = currentStream.data["tipDescription"];
-          this.motherWeek.month = currentStream.data["month"];
-          print(this.motherWeek.tipDescription);
+        if (currentStream.hasData && currentStream.data.exists) {
+          descController.text = currentStream.data['tipDescription'];
           return SafeArea(
             child: Scaffold(
               body: SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.only(top: 40.0, left: 30.0, right: 30.0),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: blockWidth * 5,
+                    vertical: blockHeight * 5,
+                  ),
                   width: double.infinity,
                   child: Column(
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          InkWell(
-                            child: Container(
-                              margin: EdgeInsets.only(right: 1.0),
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                color: Colors.green[200].withOpacity(0.4),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(25.0),
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: Colors.black26,
-                              ),
-                            ),
-                            onTap: () {
+                          CustomIconButton(
+                            icon: Icons.arrow_back,
+                            callback: () {
                               Navigator.pop(context);
                             },
                           ),
+                          SizedBox(width: blockWidth * 3),
                           Container(
-                            width: 150.0,
-                            child: Text(
-                              "Mom's Weekly development",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.0,
-                                color: Colors.black54,
-                              ),
-                            ),
+                            width: blockWidth * 50,
+                            child:
+                                CustomText(text: "Mother's Weekly development"),
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                            decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.2),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(50.0),
-                              ),
-                            ),
-                            child: Text(
-                              "Week " + this.widget.week.toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 18.0,
-                                color: Colors.green[900],
-                              ),
-                            ),
+                          SizedBox(width: blockWidth * 2),
+                          CustomLable(
+                            title: "Week " + this.widget.week.toString(),
                           ),
                         ],
                       ),
-                      SizedBox(height: 100.0),
                       Container(
                         child: Form(
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
-                              Container(
-                                child: TextFormField(
-                                  maxLines: null,
-                                  initialValue: (this.motherWeek.tipDescription != '')
-                                      ? this.motherWeek.tipDescription
-                                      : null,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(10.0),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.transparent),
-                                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.transparent),
-                                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                                    ),
-                                    prefixIcon: Icon(Icons.keyboard),
-                                    hintText: "Description ",
-                                    filled: true,
-                                    fillColor: Colors.green[50],
-                                    border: InputBorder.none,
-                                  ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      this.description = value;
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Description is required';
-                                    }
-                                    return null;
-                                  },
-                                ),
+                              SizedBox(height: blockHeight * 10),
+                              CustomInputField(
+                                hintText: "Description",
+                                fieldType: "text",
+                                fieldController: descController,
+                                prefixIcon: Icons.keyboard,
                               ),
-                              SizedBox(height: 30.0),
-                              Container(
-                                height: 45.0,
-                                width: double.infinity,
-                                child: FlatButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                    side: BorderSide(color: Colors.green[400]),
-                                  ),
-                                  color: Colors.green[400],
-                                  textColor: Colors.white,
-                                  splashColor: Colors.green[200],
-                                  child: Text(
-                                    "Submit",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    if (_formKey.currentState.validate()) {
-                                      if (description != null)
-                                        motherWeek.tipDescription = description;
-                                      _databaseService.insertMotherWeek(motherWeek);
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                ),
+                              SizedBox(height: blockHeight * 2.5),
+                              CustomButton(
+                                title: "Submit",
+                                bgColor: Colors.green[400],
+                                textColor: Colors.white,
+                                height: blockHeight * 6,
+                                callback: () {
+                                  onClickSubmit();
+                                },
                               ),
                             ],
                           ),
@@ -174,11 +119,7 @@ class _AddWeekState extends State<AddWeek> {
           );
         } else {
           return SafeArea(
-            child: Scaffold(
-              body: Container(
-                child: Text("Loading"),
-              ),
-            ),
+            child: Scaffold(body: CustomLoading()),
           );
         }
       },
